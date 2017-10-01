@@ -52,13 +52,24 @@ def atari_learn(env,
         # which is different from the number of steps in the underlying env
         return get_wrapper_by_name(env, "Monitor").get_total_steps() >= num_timesteps
 
+    # default
+    #exploration_schedule = PiecewiseSchedule(
+    #    [
+    #        (0, 1.0),
+    #        (1e6, 0.1),
+    #        (num_iterations / 2, 0.01),
+    #    ], outside_value=0.01
+    #)
+
+    # more exploration go down to 0.1 by 2m steps
     exploration_schedule = PiecewiseSchedule(
-        [
-            (0, 1.0),
-            (1e6, 0.1),
-            (num_iterations / 2, 0.01),
-        ], outside_value=0.01
-    )
+            [
+                (0, 1.0),
+                (2e6, 0.1),
+                (num_iterations / 2, 0.01),
+            ], outside_value=0.01
+        )
+
 
     dqn.learn(
         env,
