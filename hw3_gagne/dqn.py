@@ -7,7 +7,7 @@ import tensorflow                as tf
 import tensorflow.contrib.layers as layers
 from collections import namedtuple
 from dqn_utils import *
-
+import time
 OptimizerSpec = namedtuple("OptimizerSpec", ["constructor", "kwargs", "lr_schedule"])
 
 def learn(env,
@@ -202,6 +202,14 @@ def learn(env,
     print(last_obs.shape)
     print('')
 
+    # for logging
+    date_string = time.strftime("%Y-%m-%d-%H:%M")
+    best_mean_episode_rewards=[]
+    mean_episode_rewards=[]
+    explorations=[]
+    time_steps = []
+    lrs = []
+
     for t in itertools.count():
         ### 1. Check stopping criterion
         if stopping_criterion is not None and stopping_criterion(env, t):
@@ -381,9 +389,21 @@ def learn(env,
             best_mean_episode_reward = max(best_mean_episode_reward, mean_episode_reward)
         if t % LOG_EVERY_N_STEPS == 0 and model_initialized:
             print("Timestep %d" % (t,))
+	    time_steps.append(t)
             print("mean reward (100 episodes) %f" % mean_episode_reward)
+	    mean_episode_rewards.append(mean_episode_reward)
             print("best mean reward %f" % best_mean_episode_reward)
+	    best_mean_episode_rewards.append(best_mean_episode_reward)
             print("episodes %d" % len(episode_rewards))
+	    explorations.append(exploration.value(t))
             print("exploration %f" % exploration.value(t))
             print("learning_rate %f" % optimizer_spec.lr_schedule.value(t))
+	    lrs.append(optimizer_spec.lr_schedule.value(t))
             sys.stdout.flush()
+	    savename = date_string
+	    #print(np.array(mean_episode_rewards))
+	    np.savetxt('mean_episode_rewards'+savename+'.txt',np.array(mean_episode_rewards))
+	    np.savetxt('best_mean_episode_rewards'+savename+'.txt',np.array(best_mean_episode_rewards))
+	    np.savetxt('time_steps'+savename+'.txt',np.array(time_steps))
+	    np.savetxt('explorations'+savename+'.txt',np.array(explorations))
+	    np.savetxt('lrs'+savename+'.txt',np.array(lrs))
