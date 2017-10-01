@@ -402,8 +402,8 @@ def learn(env,
             sys.stdout.flush()
 	    savename = date_string
 	    #print(np.array(mean_episode_rewards))
-	    np.savetxt('mean_episode_rewards'+savename+'.txt',np.array(mean_episode_rewards))
-	    np.savetxt('best_mean_episode_rewards'+savename+'.txt',np.array(best_mean_episode_rewards))
-	    np.savetxt('time_steps'+savename+'.txt',np.array(time_steps))
-	    np.savetxt('explorations'+savename+'.txt',np.array(explorations))
-	    np.savetxt('lrs'+savename+'.txt',np.array(lrs))
+	    np.savetxt('results/mean_episode_rewards'+savename+'.txt',np.array(mean_episode_rewards))
+	    np.savetxt('results/best_mean_episode_rewards'+savename+'.txt',np.array(best_mean_episode_rewards))
+	    np.savetxt('results/time_steps'+savename+'.txt',np.array(time_steps))
+	    np.savetxt('results/explorations'+savename+'.txt',np.array(explorations))
+	    np.savetxt('results/lrs'+savename+'.txt',np.array(lrs))
